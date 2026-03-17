@@ -1,0 +1,5 @@
+### Home Route
+GET http://localhost:1198
+
+### Error Route
+GET http://localhost:1198/error
