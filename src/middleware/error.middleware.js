@@ -1,9 +1,20 @@
 const globalErrorHandler = (error, req, res, next) => {
-    console.error("Global Error Handler:", error.message);
+    if (res.headersSent) {
+        return next(error);
+    }
 
-    res.status(500).json({
+    if (error.type === "entity.parse.failed") {
+        return res.status(400).json({
+            success: false,
+            message: "Request body must contain valid JSON.",
+        });
+    }
+
+    console.error("Global Error Handler:", error);
+
+    return res.status(500).json({
         success: false,
-        message: error.message || "Internal Server Error",
+        message: "Internal Server Error",
     });
 };
 

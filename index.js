@@ -16,6 +16,13 @@ app.get("/", (req, res) => {
 
 app.use("/", errorRoutes);
 
+app.use((req, res) => {
+    res.status(404).json({
+        success: false,
+        message: "Route not found",
+    });
+});
+
 app.use(globalErrorHandler);
 
 app.listen(PORT, () => {

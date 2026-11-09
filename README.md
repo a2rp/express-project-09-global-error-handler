@@ -1,144 +1,76 @@
 # express-project-09-global-error-handler
 
-A simple Express.js backend project that demonstrates centralized error handling using a global error middleware.
+A learning API showing centralized Express.js error handling with consistent JSON responses.
 
-## Project Goal
+## What it demonstrates
 
-This project is built to understand how global error handling works in Express.js.
+- Forwarding route errors to one error-handling middleware
+- Hiding internal exception details from API responses
+- Returning JSON for malformed request bodies and unknown routes
 
-It focuses on:
+## Requirements and setup
 
-- creating routes and controllers
-- throwing errors from a controller
-- forwarding errors using `next(error)`
-- handling all errors from one central middleware
-- returning structured JSON error responses
-
-## Tech Stack
-
-- Node.js
-- Express.js
-- Nodemon
-
-## Project Structure
-
-```bash
-express-project-09-global-error-handler
-│
-├─ src
-│  ├─ controllers
-│  │  └─ error.controller.js
-│  │
-│  ├─ routes
-│  │  └─ error.route.js
-│  │
-│  └─ middleware
-│     └─ error.middleware.js
-│
-├─ index.js
-├─ api-test.rest
-├─ .gitignore
-├─ package.json
-├─ package-lock.json
-└─ README.md
-```
-
-## Installation
-
-Clone the repository:
-
-```bash
-git clone https://github.com/a2rp/express-project-09-global-error-handler.git
-cd express-project-09-global-error-handler
-```
-
-Install dependencies:
+Use Node.js 18 or later. Install dependencies:
 
 ```bash
 npm install
 ```
 
-## Run the Project
-
-Development mode with nodemon:
+Start with automatic restarts during development:
 
 ```bash
 npm run dev
 ```
 
-Production mode:
+Or start normally:
 
 ```bash
 npm start
 ```
 
-Server runs at:
+The API listens at `http://localhost:1198`. Example requests are in [`api-test.rest`](./api-test.rest) for the VS Code REST Client.
 
-```bash
-http://localhost:1198
-```
+## Endpoints
 
-## API Endpoints
+### `GET /`
 
-### GET /
-
-Returns a success response.
+Returns a status response:
 
 ```json
 {
-    "success": true,
-    "message": "Global Error Handler API is running"
+  "success": true,
+  "message": "Global Error Handler API is running"
 }
 ```
 
-### GET /error
+### `GET /error`
 
-Throws a forced error from the controller and handles it through the global error middleware.
+The controller forwards a deliberate exception to the global error middleware. The API responds with status `500` and does not expose the exception details:
 
 ```json
 {
-    "success": false,
-    "message": "This is a forced error from the controller"
+  "success": false,
+  "message": "Internal Server Error"
 }
 ```
 
-## Learning Outcome
+The full error is written to the server log.
 
-By building this project, you learn how to:
+Unknown paths return `404` with a JSON `Route not found` message. Malformed JSON request bodies return `400` with a JSON error response.
 
-- separate routes, controllers, and middleware
-- create a centralized error handler
-- pass errors using `next(error)`
-- keep controller code clean
-- send consistent error responses
+## How it works
 
-## Testing
+The error route calls `next(error)`. Express skips regular middleware and routes, then invokes the four-argument error middleware registered after the routes. The error middleware checks whether the response has already started, handles malformed JSON, logs unexpected errors, and sends a safe response.
 
-This project includes an `api-test.rest` file for quick API testing inside VS Code using the REST Client extension.
-
-## Author
-
-Ashish Ranjan
-
-Follow me
+## Author and links
 
 - GitHub: https://github.com/a2rp
 - Portfolio: https://www.ashishranjan.net
 - LinkedIn: https://www.linkedin.com/in/aashishranjan
 - Facebook: https://www.facebook.com/theash.ashish/
-
-## Links
-
-- Portfolio: [https://www.ashishranjan.net](https://www.ashishranjan.net)
-- GitHub: [https://github.com/a2rp](https://github.com/a2rp)
-- CodePen: [https://codepen.io/ash1198](https://codepen.io/ash1198)
-- LinkedIn: [https://www.linkedin.com/in/aashishranjan](https://www.linkedin.com/in/aashishranjan)
-- Facebook: [https://www.facebook.com/theash.ashish/](https://www.facebook.com/theash.ashish/)
-- YouTube: [https://www.youtube.com/@ashishranjan-ashz?sub_confirmation=1](https://www.youtube.com/@ashishranjan-ashz?sub_confirmation=1)
-- Email: [ash.ranjan09@gmail.com](mailto:ash.ranjan09@gmail.com)
-
-## Support
-
-- Support: [https://a2rp-donation-page.netlify.app/](https://a2rp-donation-page.netlify.app/)
-- Buy Me A Coffee: [https://buymeacoffee.com/a2rp](https://buymeacoffee.com/a2rp)
-- Patreon: [https://patreon.com/a2rp](https://patreon.com/a2rp)
+- CodePen: https://codepen.io/ash1198
+- YouTube: https://www.youtube.com/@ashishranjan-ashz?sub_confirmation=1
+- Email: ash.ranjan09@gmail.com
+- Support: https://a2rp-donation-page.netlify.app/
+- Buy Me a Coffee: https://buymeacoffee.com/ashishranjan
+- Patreon: https://patreon.com/ashishranjan
