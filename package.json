@@ -1,5 +1,6 @@
 {
     "name": "express-project-09-global-error-handler",
+    "private": true,
     "version": "1.0.0",
     "description": "An Express.js API demonstrating centralized JSON error handling, malformed JSON responses, and route not found responses.",
     "main": "index.js",
